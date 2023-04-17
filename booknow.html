@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>EV slot app</title>
+  </head>
+
+
+
+  <!-- content comes here -->
+  <body>
+    
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">EV Slot Booking App</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header bg-dark">
+              <h5 class="offcanvas-title text-white" id="offcanvasNavbarLabel">EV Slot Booking App</h5>
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body bg-dark">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="#">My Vehicles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="#">Charging History</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="#">Preferred Locations</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="#">Payment Methods</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="#">My Bookings</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link mb-3" aria-current="page" href="#">Help & Support</a>
+                </li>
+              </ul>
+              <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                  <strong>Name</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                   <!-- <li><a class="dropdown-item" href="#">New project...</a></li>  -->
+                  <!-- <li><a class="dropdown-item" href="#">Settings</a></li>  -->
+                   <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
+
+
+      <!-- divyansh code  -->
+      <div class="container mt-5 p-4">
+
+      <body style="z-index:4;">
+
+        <button id="popup" onclick="bttn()">Location Picker</button>
+        
+        <div id="container">
+        <forms>
+         <button onclick="closes()" id="close-button">&times;</button>
+        
+        <h1 style="color:grey;text-align:center;">Delivery <span style="color:#f44336;"> Checker:</span></h1>
+        <input type="text" name="pinvalidator" placeholder="Enter Pincode" id="pinvalidator"><br><br>
+        <input type="submit" name="validate" id="submitbtn" onclick="myFunction()" value="Check">
+        <p id="demo"></p>
+        </forms>
+        <button onclick="getExactLocation()" id="detect-location">detect</button>
+        </div>
+        <script>
+          var apiKey = "AIzaSyBvJP_qHslhDHZC8t12BpRgJevmS3IBFYc"
+            function detectLocation(){
+                navigator.geolocation.getCurrentPosition(showPosition)
+            }
+          function getExactLocation() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                let latLon = JSON.parse(this.responseText)
+                getlocationPincodeByLatLon(latLon.location.lat+","+latLon.location.lng)
+              }
+            };
+            xhttp.open("POST", "https://www.googleapis.com/geolocation/v1/geolocate?key="+apiKey, true);
+            xhttp.send();
+          }
+        
+          function getlocationPincodeByLatLon(latLon) {
+            let pincode,flag=true
+              var dileveryPincodes = ['470002','452001']
+              
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+        
+                // console.log(this.responseText);
+              var valueMap = JSON.parse(this.responseText)
+              //console.log(valueMap)
+              // console.log(valueMap.results[0].address_components)
+              for (const key in valueMap.results[0].address_components) {
+                if (valueMap.results[0].address_components.hasOwnProperty.call(valueMap.results[0].address_components, key)) {
+                  // const element = object[key];
+                   console.log(valueMap.results[0].address_components[key])
+                  for (const code in valueMap.results[0].address_components[key].types) {
+                    if (Object.hasOwnProperty.call(valueMap.results[0].address_components[key].types, code)) {
+                      // console.log(valueMap.results[0].address_components[key].types[code]);
+                      if("postal_code" === valueMap.results[0].address_components[key].types[code]){
+                        console.log(valueMap.results[0].address_components[key].long_name)
+                        pincode = valueMap.results[0].address_components[key].long_name;
+                        flag = false
+                        break;
+                      }
+                    }
+                  }
+                }
+                if(!flag){
+                  break;
+                }
+              }
+              if(dileveryPincodes.indexOf(pincode)!=-1){
+                document.getElementById("demo").innerHTML = "You Can Place Order";
+              }
+              else{
+                document.getElementById("demo").innerHTML = "Sorry, this service has not been Started in your Area";
+              }
+                
+              }
+            };
+            xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latLon+"&key="+apiKey, true);
+            xhttp.send();
+          }
+        
+        
+          function getCode(latLon){
+              let pincode,flag=true
+              var dileveryPincodes = ['470002','452001']
+              var xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              // console.log(this.responseText);
+              var valueMap = JSON.parse(this.responseText)
+              //console.log(valueMap)
+              // console.log(valueMap.results[0].address_components)
+              for (const key in valueMap.results[0].address_components) {
+                if (valueMap.results[0].address_components.hasOwnProperty.call(valueMap.results[0].address_components, key)) {
+                  // const element = object[key];
+                   console.log(valueMap.results[0].address_components[key])
+                  for (const code in valueMap.results[0].address_components[key].types) {
+                    if (Object.hasOwnProperty.call(valueMap.results[0].address_components[key].types, code)) {
+                      // console.log(valueMap.results[0].address_components[key].types[code]);
+                      if("postal_code" === valueMap.results[0].address_components[key].types[code]){
+                        console.log(valueMap.results[0].address_components[key].long_name)
+                        pincode = valueMap.results[0].address_components[key].long_name;
+                        flag = false
+                        break;
+                      }
+                    }
+                  }
+                }
+                if(!flag){
+                  break;
+                }
+              }
+              if(dileveryPincodes.indexOf(pincode)!=-1){
+                document.getElementById("demo").innerHTML = "You Can Place Order";
+              }
+              else{
+                document.getElementById("demo").innerHTML = "Sorry, this service has not been Started in your Area";
+              }
+            }
+          };
+          xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng="+latLon+"&key=AIzaSyBvJP_qHslhDHZC8t12BpRgJevmS3IBFYc", true);
+          xhttp.send();    
+            }
+        
+          function showPosition(response){
+                alert(response.coords.latitude +" "+response.coords.longitude)
+                console.log(response.coords.longitude)
+                console.log(response.coords.latitude)
+                console.log(response)
+                getCode(response.coords.latitude+","+response.coords.longitude)
+            }
+        function bttn(){
+          document.getElementById("popup").style.display = "none";
+          document.getElementById("container").style.display ="block";
+        }
+        function closes(){
+        console.log("Inside CLose")
+          document.getElementById("popup").style.display = "block";
+          document.getElementById("container").style.display ="none";
+        }
+        
+        function myFunction()
+         {
+          var input = document.getElementById("pinvalidator");
+          console.log(input.value)
+           if(input.value=='470002'){
+           document.getElementById("demo").innerHTML = "You Can Place Order";
+             }
+           else{
+              document.getElementById("demo").innerHTML = "Sorry, this service has not been Started in your Area";
+             }
+        }
+        
+        
+        </script>
+        </div>
+
+    
+
+
+
+
+  <!-- footer  -->
+
+  <div class="container bg-dark ">
+    <footer class="py-3 my-4">
+      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+        <li class="nav-item"><a href="/project/" class="nav-link px-2 text-muted">Home</a></li>
+        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li> -->
+        <!-- <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li> -->
+        <li class="nav-item"><a href="/supp.html" class="nav-link px-2 text-muted">FAQs</a></li>
+        <li class="nav-item"><a href="/aboutproject.html" class="nav-link px-2 text-muted">About</a></li>
+      </ul>
+      <p class="text-center text-muted">© 2022 EV charging slot booking app</p>
+    </footer>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
